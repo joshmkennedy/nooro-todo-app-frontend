@@ -15,11 +15,14 @@ export default function CompletionStatus({
 			<input
 				checked={status}
 				type="checkbox"
-				onChange={async () => {
-					const task = await updateTask(id, { completed: !status });
-					if (task) {
-						setStatus(task.completed);
-					}
+				onChange={async (e) => {
+					e.stopPropagation()
+					// make it feel instant
+					setStatus((s) => !s);
+					await updateTask(id, { completed: !status }).catch(() =>
+						// set it back if we fail
+						setStatus((s) => !s)
+					); 
 				}}
 			/>
 		</form>
