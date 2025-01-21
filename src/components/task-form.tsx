@@ -1,26 +1,42 @@
-'use client'
+"use client";
 import { TaskDTO } from "@/types";
+import FormInputWrapper from "./form-input-wrapper";
+import CustomColorPicker from "./custom-color-picker";
 
 export default function TaskForm({
-	task,
-	action,
+  task,
 }: {
-	task: Partial<TaskDTO>;
-	action: (formData: FormData) => void;
+  task?: Partial<TaskDTO>;
 }) {
-	return (
-		<form
-			className="min-w-[900]"
-			action={action}
-		>
-			<input name="completed" type="checkbox" defaultChecked={task?.completed ?? false} />
-			<input
-				name="title"
-				className="bg-slate-900 text-lg p-4 min-w-full"
-				defaultValue={task?.title ?? ""}
-			/>
-			<input name="color" type="color" defaultValue={task?.color ?? "#ff00ff"} />
-			<button>Save</button>
-		</form>
-	);
+  return (
+    <div className="flex flex-col gap-6">
+      <FormInputWrapper label="Title" name="title">
+        <input
+          name="title"
+          type="text"
+          defaultValue={task?.title}
+          placeholder="Ex: Brush your teeth"
+          className="border border-theme-gray-200 rounded-lg text-sm p-4 text-foreground bg-theme-gray-300 placeholder:text-theme-gray-100"
+        />
+      </FormInputWrapper>
+
+      <FormInputWrapper label="Color" name="color">
+        <CustomColorPicker
+          name="color"
+          color={task?.color ?? ""}
+          options={[
+            { name: "Red", value: "#FF3B2F" },
+            { name: "Orange", value: "#FF9500" },
+            { name: "Yellow", value: "#FFCC00" },
+            { name: "Green", value: "#34C759" },
+            { name: "Blue", value: "#007AFF" },
+            { name: "Indigo", value: "#5856D6" },
+            { name: "Purple", value: "#AF52DE" },
+            { name: "Pink", value: "#FF2D55" },
+            { name: "Brown", value: "#A2845E" },
+          ]}
+        />
+      </FormInputWrapper>
+    </div>
+  );
 }

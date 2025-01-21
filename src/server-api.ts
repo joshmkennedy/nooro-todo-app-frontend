@@ -26,7 +26,7 @@ export async function getTask(id:number) {
 	return task
 }
 
-export async function newTask(data:Omit<TaskDTO,'id'>):Promise<TaskDTO>{
+export async function newTask(data:Omit<TaskDTO,'id'|'completed'>):Promise<TaskDTO>{
 	const res = await fetch(`http://localhost:3100/tasks`, {
 		method: "POST",
 		headers: {
@@ -36,4 +36,12 @@ export async function newTask(data:Omit<TaskDTO,'id'>):Promise<TaskDTO>{
 	}).then((data) => data.json());
 	revalidatePath("/");
 	return res;
+}
+
+export async function deleteTask(id:number):Promise<void>{
+	await fetch(`http://localhost:3100/tasks/${id}`, {
+		method:"DELETE",
+	})
+	revalidatePath("/")
+	return
 }
