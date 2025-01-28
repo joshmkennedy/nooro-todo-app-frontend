@@ -7,15 +7,10 @@ import type { TaskDTO } from "@/types";
 import PlusIcon from "@/components/plus-icon";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { getTasks } from "@/server-api";
 
 export default async function Home() {
-	const token = (await cookies()).get("token") 
-  const result = (await fetch(`http://localhost:3100/tasks`, {
-    headers: {
-			"Authorization": `Bearer ${token?.value}`
-		},
-    credentials: "include",
-  }).then((data) => data.json())) as { success: boolean; data: TaskDTO[] };
+  const result = await getTasks();
   if ("error" in result && result.error == "No token provided") {
     redirect("/signin");
   }
