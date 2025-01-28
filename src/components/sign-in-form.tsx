@@ -4,39 +4,59 @@ import { signin } from "@/server-api";
 import { useActionState } from "react";
 import { InputError } from "./input-error";
 
-async function _action(prevState: any, formData: FormData) {
+type ActionResult = {
+  error: string;
+  email?: string;
+  password?: string;
+};
+async function _action(prevState: ActionResult, formData: FormData) {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
   if (!email) {
     return {
-      message: "Email is required",
+      error: "Email is required",
+			password:password ?? "",
     };
   }
   if (!password) {
-    return { message: "Passowrd Is Required" };
+    return {
+			email: email,
+      error: "Passowrd Is Required",
+    };
   }
 
-  const message = (await signin(email, password).catch((e) => e.message)) ?? "";
-  return { message };
+  const result: ActionResult = (await signin(email, password).catch()) ?? {
+    error: "",
+  };
+  result.email = email;
+  result.password = password;
+
+  return result;
 }
 
-const initialState = {
-  message: "",
+const initialState: ActionResult = {
+  error: "",
+  password: "",
+  email: "",
 };
 
 export function SignInForm() {
-  const [state, action, isPending] = useActionState<{ message: string }>(
+  const [state, action, isPending] = useActionState<ActionResult>(
     _action,
     initialState,
   );
+  console.log(state.error);
   return (
     <>
-      <form action={action} className="flex flex-col gap-6">
-        {state.message && <InputError message={state.message} />}
+      <form action={action} className="flex flex-col gap-6 px-4 md:px-0">
+				<div className="-mt-6 pb-6">
+        <InputError message={state.error} />
+				</div>
 
         <FormInputWrapper name={"email"} label={"Email"}>
           <input
             className="border border-theme-gray-200 rounded-lg text-sm p-4 text-foreground bg-theme-gray-300 placeholder:text-theme-gray-100"
+            defaultValue={state.email}
             type="email"
             name="email"
             id="email"
@@ -44,6 +64,7 @@ export function SignInForm() {
         </FormInputWrapper>
         <FormInputWrapper label={"Password"} name={"password"}>
           <input
+            defaultValue={state.password}
             className="border border-theme-gray-200 rounded-lg text-sm p-4 text-foreground bg-theme-gray-300 placeholder:text-theme-gray-100"
             type="password"
             name="password"

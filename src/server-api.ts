@@ -75,7 +75,7 @@ export async function deleteTask(id: number): Promise<void> {
   return;
 }
 
-export async function signin(email: string, password: string) {
+export async function signin(email: string, password: string):Promise<{error:string}|never> {
   const response = await fetch("http://localhost:3100/auth/signin", {
     headers: {
       "Content-Type": "application/json",
@@ -83,19 +83,23 @@ export async function signin(email: string, password: string) {
     method: "POST",
     body: JSON.stringify({ email, password }),
   }).then(async (res) => {
-    if (res.ok) {
-      const cookieData = await getSetToken(res);
+    if (res.ok && res.status < 400) {
+      const cookieData = await getSetToken(res).catch(() => null);
       if (cookieData) {
         (await cookies()).set(cookieData);
+        return res.json();
       }
-
-      return res.json();
     }
-    throw new Error(res.statusText);
+
+		const message = await res.text()
+    return {error:message}
   });
-  if (response) {
-    redirect("/");
+  if (response.message) {
+    return redirect("/");
   }
+
+	// we should have and error
+  return response;
 }
 
 export async function signout() {
@@ -110,8 +114,7 @@ export async function getToken() {
   return token?.value;
 }
 
-
-export async function getSetToken(response:Response) {
+export async function getSetToken(response: Response) {
   const setCookies = response.headers.getSetCookie();
   const cookiekeyval = setCookies
     .find((cookieStr) => cookieStr.startsWith("token="))
@@ -119,25 +122,22 @@ export async function getSetToken(response:Response) {
     .map((part) => part.split("="));
   if (!cookiekeyval) throw new Error("Unexpected Error");
 
-  const cookieData = cookiekeyval.reduce(
-    (data, keyval) => {
-      if (keyval[0] == "token") {
-        data.name = "token";
-        data.value = keyval[1];
-      }
-      if (keyval[0] == "Max-Age") {
-        data.maxAge = parseInt(keyval[1]);
-      }
-      if (keyval[0] == "Path") {
-        data.path = keyval[1];
-      }
-      if (keyval[0] == "HttpOnly") {
-        data.httpOnly = true;
-      }
+  const cookieData = cookiekeyval.reduce((data, keyval) => {
+    if (keyval[0] == "token") {
+      data.name = "token";
+      data.value = keyval[1];
+    }
+    if (keyval[0] == "Max-Age") {
+      data.maxAge = parseInt(keyval[1]);
+    }
+    if (keyval[0] == "Path") {
+      data.path = keyval[1];
+    }
+    if (keyval[0] == "HttpOnly") {
+      data.httpOnly = true;
+    }
 
-      return data;
-    },
-    {} as ResponseCookie,
-  );
-	return cookieData
+    return data;
+  }, {} as ResponseCookie);
+  return cookieData;
 }
