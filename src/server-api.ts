@@ -86,7 +86,7 @@ export async function signin(
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
-  if (!response.ok || response.status < 399) {
+  if (!response.ok || response.status > 399) {
     const error = await response.text();
     return { error };
   }

@@ -3,24 +3,25 @@ import FormInputWrapper from "@/components/form-input-wrapper";
 import { signin } from "@/server-api";
 import { useActionState } from "react";
 import { InputError } from "./input-error";
+import { InputField } from "./input-field";
 
 type ActionResult = {
   error: string;
   email?: string;
   password?: string;
 };
-async function _action(prevState: ActionResult, formData: FormData) {
+async function action(prevState: ActionResult, formData: FormData) {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
   if (!email) {
     return {
       error: "Email is required",
-			password:password ?? "",
+      password: password ?? "",
     };
   }
   if (!password) {
     return {
-			email: email,
+      email: email,
       error: "Passowrd Is Required",
     };
   }
@@ -41,33 +42,31 @@ const initialState: ActionResult = {
 };
 
 export function SignInForm() {
-  const [state, action, isPending] = useActionState<ActionResult>(
-    _action,
+  const [state, formAction, isPending] = useActionState<ActionResult>(
+    action,
     initialState,
   );
   return (
     <>
-      <form action={action} className="flex flex-col gap-6 px-4 md:px-0">
-				<div className="-mt-6 pb-6">
-        <InputError message={state.error} />
-				</div>
+      <form action={formAction} className="flex flex-col gap-6 px-4 md:px-0">
+        <div className="-mt-6 pb-6">
+          <InputError message={state.error} />
+        </div>
 
         <FormInputWrapper name={"email"} label={"Email"}>
-          <input
-            className="border border-theme-gray-200 rounded-lg text-sm p-4 text-foreground bg-theme-gray-300 placeholder:text-theme-gray-100"
+          <InputField
             defaultValue={state.email}
-            type="email"
+            inputType="email"
             name="email"
             id="email"
           />
         </FormInputWrapper>
         <FormInputWrapper label={"Password"} name={"password"}>
-          <input
-            defaultValue={state.password}
-            className="border border-theme-gray-200 rounded-lg text-sm p-4 text-foreground bg-theme-gray-300 placeholder:text-theme-gray-100"
-            type="password"
+          <InputField
             name="password"
+            inputType="password"
             id="password"
+            defaultValue={state.password}
           />
         </FormInputWrapper>
         <button className=" gap-2 w-full flex justify-center items-center px-3 text-btn font-regular py-4 bg-theme-blue-base text-foreground rounded-sm hover:bg-theme-blue-light ">
