@@ -75,31 +75,29 @@ export async function deleteTask(id: number): Promise<void> {
   return;
 }
 
-export async function signin(email: string, password: string):Promise<{error:string}|never> {
+export async function signin(
+  email: string,
+  password: string,
+): Promise<{ error: string } | never> {
   const response = await fetch("http://localhost:3100/auth/signin", {
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
     body: JSON.stringify({ email, password }),
-  }).then(async (res) => {
-    if (res.ok && res.status < 400) {
-      const cookieData = await getSetToken(res).catch(() => null);
-      if (cookieData) {
-        (await cookies()).set(cookieData);
-        return res.json();
-      }
-    }
-
-		const message = await res.text()
-    return {error:message}
   });
-  if (response.message) {
-    return redirect("/");
+  if (!response.ok || response.status < 399) {
+    const error = await response.text();
+    return { error };
   }
 
-	// we should have and error
-  return response;
+  const cookieData = await getSetToken(response).catch(() => null);
+
+  if (cookieData) {
+    (await cookies()).set(cookieData);
+    return redirect("/");
+  }
+	return {error:"An Unknown Error Occured"}
 }
 
 export async function signout() {
