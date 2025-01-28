@@ -6,12 +6,11 @@ import TaskStatus from "@/components/task-status";
 import type { TaskDTO } from "@/types";
 import PlusIcon from "@/components/plus-icon";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { getTasks } from "@/server-api";
 
 export default async function Home() {
   const result = await getTasks();
-  if ("error" in result && result.error == "No token provided") {
+  if ("error" in result ) {
     redirect("/signin");
   }
 	console.log(result)
