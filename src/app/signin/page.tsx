@@ -1,3 +1,4 @@
+import FormInputWrapper from "@/components/form-input-wrapper";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -73,12 +74,26 @@ async function signin(formData: FormData) {
 export default function SignIn() {
   return (
     <>
-      <form action={signin}>
-        <label htmlFor="email">email</label>
-        <input type="email" name="email" id="email" />
-        <label htmlFor="password">password</label>
-        <input type="password" name="password" id="password" />
-        <button>Signin</button>
+      <form action={signin} className="flex flex-col gap-6">
+        <FormInputWrapper name={"email"} label={"Email"}>
+          <input
+            className="border border-theme-gray-200 rounded-lg text-sm p-4 text-foreground bg-theme-gray-300 placeholder:text-theme-gray-100"
+            type="email"
+            name="email"
+            id="email"
+          />
+        </FormInputWrapper>
+        <FormInputWrapper label={"Password"} name={"password"}>
+          <input
+            className="border border-theme-gray-200 rounded-lg text-sm p-4 text-foreground bg-theme-gray-300 placeholder:text-theme-gray-100"
+            type="password"
+            name="password"
+            id="password"
+          />
+        </FormInputWrapper>
+        <button className=" gap-2 w-full flex justify-center items-center px-3 text-btn font-regular py-4 bg-theme-blue-base text-foreground rounded-sm hover:bg-theme-blue-light ">
+          Sign in
+        </button>
       </form>
     </>
   );
