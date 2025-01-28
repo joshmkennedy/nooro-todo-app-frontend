@@ -5,11 +5,21 @@ import TaskStatus from "@/components/task-status";
 
 import type { TaskDTO } from "@/types";
 import PlusIcon from "@/components/plus-icon";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export default async function Home() {
-  const result = (await fetch(`http://localhost:3100/tasks`).then((data) =>
-    data.json(),
-  )) as { success: boolean; data: TaskDTO[] };
+	const token = (await cookies()).get("token") 
+  const result = (await fetch(`http://localhost:3100/tasks`, {
+    headers: {
+			"Authorization": `Bearer ${token?.value}`
+		},
+    credentials: "include",
+  }).then((data) => data.json())) as { success: boolean; data: TaskDTO[] };
+  if ("error" in result && result.error == "No token provided") {
+    redirect("/signin");
+  }
+	console.log(result)
   const tasks = result.data;
 
   const completedCount: number = tasks.reduce(
@@ -26,10 +36,10 @@ export default async function Home() {
         Create Task
         <PlusIcon />
       </Link>
-			<div className="mt-16 flex flex-col gap-6">
-      <TaskStatus total={tasks.length} completedCount={completedCount} />
-      <TaskList tasks={tasks} />
-			</div>
+      <div className="mt-16 flex flex-col gap-6">
+        <TaskStatus total={tasks.length} completedCount={completedCount} />
+        <TaskList tasks={tasks} />
+      </div>
     </>
   );
 }
