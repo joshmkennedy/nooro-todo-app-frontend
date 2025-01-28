@@ -56,7 +56,7 @@ export function SignInForm() {
         <FormInputWrapper name={"email"} label={"Email"}>
           <InputField
             defaultValue={state.email}
-            inputType="email"
+            type="email"
             name="email"
             id="email"
           />
@@ -64,7 +64,7 @@ export function SignInForm() {
         <FormInputWrapper label={"Password"} name={"password"}>
           <InputField
             name="password"
-            inputType="password"
+            type="password"
             id="password"
             defaultValue={state.password}
           />

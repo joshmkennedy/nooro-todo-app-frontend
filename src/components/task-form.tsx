@@ -2,6 +2,7 @@
 import { TaskDTO } from "@/types";
 import FormInputWrapper from "./form-input-wrapper";
 import CustomColorPicker from "./custom-color-picker";
+import { InputField } from "./input-field";
 
 export default function TaskForm({
   task,
@@ -11,13 +12,12 @@ export default function TaskForm({
   return (
     <div className="flex flex-col gap-6">
       <FormInputWrapper label="Title" name="title">
-        <input
+        <InputField
           name="title"
           type="text"
 					required
           defaultValue={task?.title}
           placeholder="Ex: Brush your teeth"
-          className="border border-theme-gray-200 rounded-lg text-sm p-4 text-foreground bg-theme-gray-300 placeholder:text-theme-gray-100"
         />
       </FormInputWrapper>
 
