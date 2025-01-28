@@ -2,6 +2,8 @@
 import { revalidatePath } from "next/cache";
 import { TaskDTO } from "./types";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 export async function getTasks() {
   const token = await getToken();
@@ -73,7 +75,69 @@ export async function deleteTask(id: number): Promise<void> {
   return;
 }
 
+export async function signin(email: string, password: string) {
+  const response = await fetch("http://localhost:3100/auth/signin", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  }).then(async (res) => {
+    if (res.ok) {
+      const cookieData = await getSetToken(res);
+      if (cookieData) {
+        (await cookies()).set(cookieData);
+      }
+
+      return res.json();
+    }
+    throw new Error(res.statusText);
+  });
+  if (response) {
+    redirect("/");
+  }
+}
+
+export async function signout() {
+  (await cookies()).set("token", "");
+  await fetch(`http://localhost:3100/auth/signout`, { method: "POST" });
+  console.log("here");
+  redirect("/signin");
+}
+
 export async function getToken() {
   const token = (await cookies()).get("token");
   return token?.value;
+}
+
+
+export async function getSetToken(response:Response) {
+  const setCookies = response.headers.getSetCookie();
+  const cookiekeyval = setCookies
+    .find((cookieStr) => cookieStr.startsWith("token="))
+    ?.split(";")
+    .map((part) => part.split("="));
+  if (!cookiekeyval) throw new Error("Unexpected Error");
+
+  const cookieData = cookiekeyval.reduce(
+    (data, keyval) => {
+      if (keyval[0] == "token") {
+        data.name = "token";
+        data.value = keyval[1];
+      }
+      if (keyval[0] == "Max-Age") {
+        data.maxAge = parseInt(keyval[1]);
+      }
+      if (keyval[0] == "Path") {
+        data.path = keyval[1];
+      }
+      if (keyval[0] == "HttpOnly") {
+        data.httpOnly = true;
+      }
+
+      return data;
+    },
+    {} as ResponseCookie,
+  );
+	return cookieData
 }
