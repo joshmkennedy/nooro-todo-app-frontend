@@ -45,7 +45,6 @@ export function SignInForm() {
     _action,
     initialState,
   );
-  console.log(state.error);
   return (
     <>
       <form action={action} className="flex flex-col gap-6 px-4 md:px-0">
