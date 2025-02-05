@@ -1,4 +1,4 @@
-import CheckMark from "./checkMark";
+import CheckMark from "./checkmark-icon";
 
 export default function CheckedIcon() {
   return (

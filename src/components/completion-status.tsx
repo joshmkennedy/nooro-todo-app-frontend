@@ -1,8 +1,8 @@
 "use client";
 import { updateTask } from "@/server-api";
 import { useState } from "react";
-import UnCheckedIcon from "./unchecked-icon";
-import CheckedIcon from "./checked-icon";
+import UnCheckedIcon from "./elements/icons/unchecked-icon";
+import CheckedIcon from "./elements/icons/checked-icon";
 
 export default function CompletionStatus({
   status: initialStatus,

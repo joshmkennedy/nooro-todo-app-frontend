@@ -4,7 +4,7 @@ import CompletionStatus from "./completion-status";
 
 import { TaskDTO } from "@/types";
 import { deleteTask } from "@/server-api";
-import TrashIcon from "./trash-icon";
+import TrashIcon from "./elements/icons/trash-icon";
 
 const completeText = "text-theme-gray-100 line-through"
 const uncompletedText = ""

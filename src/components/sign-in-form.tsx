@@ -1,9 +1,10 @@
 "use client";
-import FormInputWrapper from "@/components/form-input-wrapper";
+import FormInputWrapper from "@/components/elements/form-input-wrapper";
 import { signin } from "@/server-api";
 import { useActionState } from "react";
-import { InputError } from "./input-error";
-import { InputField } from "./input-field";
+import { InputError } from "./elements/input-error";
+import { InputField } from "./elements/input-field";
+import { FullWidthButton } from "./elements/full-width-button";
 
 type ActionResult = {
   error: string;
@@ -56,6 +57,7 @@ export function SignInForm() {
         <FormInputWrapper name={"email"} label={"Email"}>
           <InputField
             defaultValue={state.email}
+						placeholder={"admin@email.com"}
             type="email"
             name="email"
             id="email"
@@ -69,9 +71,9 @@ export function SignInForm() {
             defaultValue={state.password}
           />
         </FormInputWrapper>
-        <button className=" gap-2 w-full flex justify-center items-center px-3 text-btn font-regular py-4 bg-theme-blue-base text-foreground rounded-sm hover:bg-theme-blue-light ">
+        <FullWidthButton >
           {!isPending ? "Sign in" : "Signing In"}
-        </button>
+        </FullWidthButton>
       </form>
     </>
   );

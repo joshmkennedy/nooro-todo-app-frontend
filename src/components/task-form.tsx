@@ -1,8 +1,8 @@
 "use client";
 import { TaskDTO } from "@/types";
-import FormInputWrapper from "./form-input-wrapper";
+import FormInputWrapper from "./elements/form-input-wrapper";
 import CustomColorPicker from "./custom-color-picker";
-import { InputField } from "./input-field";
+import { InputField } from "./elements/input-field";
 
 export default function TaskForm({
   task,

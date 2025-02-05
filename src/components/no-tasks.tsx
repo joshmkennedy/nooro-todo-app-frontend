@@ -1,4 +1,4 @@
-import ClipboardIcon from "./clipboard-icon";
+import ClipboardIcon from "./elements/icons/clipboard-icon";
 
 export default function NoTasks(){
 	return <div className="text-center text-theme-gray-100 flex flex-col items-center gap-4 py-14 border-t border-200">

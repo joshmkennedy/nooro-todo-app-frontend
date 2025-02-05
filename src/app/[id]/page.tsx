@@ -2,8 +2,9 @@ import { notFound, redirect } from "next/navigation";
 
 import TaskForm from "@/components/task-form";
 import { getTask, updateTask } from "@/server-api";
-import CheckMark from "@/components/checkMark";
+import CheckMark from "@/components/elements/icons/checkmark-icon";
 import BackLink from "@/components/back-link";
+import { FullWidthButton } from "@/components/elements/full-width-button";
 
 export default async function Task({
 	params,
@@ -29,12 +30,12 @@ export default async function Task({
 				}}
 			>
 				<TaskForm task={task} />
-				<button className=" gap-2 w-full flex justify-center items-center px-3 text-btn font-regular py-4 bg-theme-blue-base text-foreground rounded-sm hover:bg-theme-blue-light ">
+				<FullWidthButton>
 					Save
 					<span className="w-5">
 						<CheckMark />
 					</span>
-				</button>
+				</FullWidthButton>
 			</form>
 		</div>
 	);

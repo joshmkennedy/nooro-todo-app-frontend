@@ -4,7 +4,7 @@ import TaskList from "@/components/task-list";
 import TaskStatus from "@/components/task-status";
 
 import type { TaskDTO } from "@/types";
-import PlusIcon from "@/components/plus-icon";
+import PlusIcon from "@/components/elements/icons/plus-icon";
 import { redirect } from "next/navigation";
 import { getTasks } from "@/server-api";
 

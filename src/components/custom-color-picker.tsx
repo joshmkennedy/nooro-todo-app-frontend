@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import CheckMark from "./checkMark";
+import { useState } from "react";
+import CheckMark from "./elements/icons/checkmark-icon";
 
 export default function CustomColorPicker({
   color: initialColor,

@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import TaskForm from "@/components/task-form";
 import { newTask } from "@/server-api";
 import BackLink from "@/components/back-link";
-import PlusIcon from "@/components/plus-icon";
+import PlusIcon from "@/components/elements/icons/plus-icon";
+import { FullWidthButton } from "@/components/elements/full-width-button";
 
 export default async function NewTask() {
   return (
@@ -13,7 +14,6 @@ export default async function NewTask() {
         className="min-w-full flex flex-col gap-12"
         action={async (data: FormData) => {
           "use server";
-					console.log(data.get("color"))
           await newTask({
             title: data.get("title")?.toString() ?? "",
             color: data.get("color")?.toString() ?? "",
@@ -22,9 +22,9 @@ export default async function NewTask() {
         }}
       >
         <TaskForm />
-				<button className=" gap-2 w-full flex justify-center items-center px-3 text-btn font-regular py-4 bg-theme-blue-base text-foreground rounded-sm hover:bg-theme-blue-light ">
+				<FullWidthButton>
 					Add Task <span><PlusIcon/></span>
-				</button>
+				</FullWidthButton>
       </form>
     </div>
   );
